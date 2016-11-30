@@ -31,16 +31,16 @@ class main extends PluginBase {
 					foreach ($this->requests as $requester => $accepter){
 						if ($accepter === $sender->getName()){
 							$pos = $sender->getPosition();
-							$sender->sendMessage(TextFormat::GREEN."TPA request accepted!");
+							$sender->sendMessage(TextFormat::GREEN."La requête de téleportation à été acceptée !");
 							$requester = $this->getServer()->getPlayer($requester);
-							$requester->sendMessage("TPA request accepted teleporting in ".$this->config->get("tpdelay")." secs!");
+							$requester->sendMessage("Vous allez être téleporter dans ".$this->config->get("tpdelay")." seconde(s) !");
 							$task = new teleport($this, $sender, $pos);
 							$this->getServer()->getScheduler()->scheduleDelayedTask($task, 20 * $this->getConfig()->get("tpdelay"));
 							$this->removeRequest($requester);
 						}
 					}
 				}else{
-					$sender->sendMessage("No pending tpa requests :(");
+					$sender->sendMessage("Aucune requête en attente :(");
 				}
 			break;
 			case "tpa":
@@ -55,11 +55,11 @@ class main extends PluginBase {
 							$sender->sendMessage("You are not friends with this player. :( \nDo /friend add [name] \nto request to be friends");
 						}
 						}else{
-							$sender->sendMessage("Sent tpa request!");
+							$sender->sendMessage("La requête de téleportation a été envoyer avec succès !");
 							$this->addRequest($sender, $requestp);
 						}
 					}else{
-						$sender->sendMessage("Player not online :(");
+						$sender->sendMessage("Le joueur n'est pas en ligne !:(");
 					}
 				}else{
 					$sender->sendMessage("USAGE: /tpa [name]");
@@ -71,12 +71,12 @@ class main extends PluginBase {
 	
 	public function teleportPlayer(Player $player,Position $pos){
 		$player->teleport($pos,$player->getYaw(),$player->getPitch());
-		$player->sendMessage("Teleported!");
+		$player->sendPopup("Teleporté !");
 	}
 	
 	public function addRequest(Player $player,Player $request){
 		$this->requests[$player->getName()] = $request->getName();
-		$request->sendMessage(TextFormat::GREEN."Player: ".$player->getName()." has requested to teleport to you do /tpaccept to accept! \n or ignore to ignore");
+		$request->sendMessage(TextFormat::GREEN."Player: ".$player->getName()." vous à envoyer une requête de tp ! POUR ACCEPTER: /tpaccept pour accepter \n ou ignorer le si vous ne voulez pas");
 		$task = new removeRequest($this, $player);
 		$this->getServer()->getScheduler()->scheduleDelayedTask($task, 10*20);
 	}
